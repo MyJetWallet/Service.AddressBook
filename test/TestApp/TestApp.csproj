@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net6.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Grpc.Net.Client" Version="2.52.0" />
+    <PackageReference Include="protobuf-net.Grpc" Version="1.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\Service.AddressBook.Client\Service.AddressBook.Client.csproj" />
+    <ProjectReference Include="..\..\src\Service.AddressBook.Grpc\Service.AddressBook.Grpc.csproj" />
+  </ItemGroup>
+
+</Project>
