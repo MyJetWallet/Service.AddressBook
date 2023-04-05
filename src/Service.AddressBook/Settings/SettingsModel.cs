@@ -13,5 +13,18 @@ namespace Service.AddressBook.Settings
 
         [YamlProperty("AddressBook.ElkLogs")]
         public LogElkSettings ElkLogs { get; set; }
+        
+        [YamlProperty("AddressBook.SpotServiceBusHostPort")]
+        public string  SpotServiceBusHostPort{ get; set; } 
+        
+        [YamlProperty("AddressBook.PostgresConnectionString")]
+        public string PostgresConnectionString { get; set; }
+        
+        [YamlProperty("AddressBook.MyNoSqlWriterUrl")]
+        public string MyNoSqlWriterUrl { get; set; }
+        
+        [YamlProperty("AddressBook.ClientProfileGrpcServiceUrl")]
+        public string ClientProfileGrpcServiceUrl { get; set; }
+
     }
 }

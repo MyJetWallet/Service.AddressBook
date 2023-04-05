@@ -4,4 +4,8 @@
     <TargetFramework>net6.0</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Service.AddressBook.Domain.Models\Service.AddressBook.Domain.Models.csproj" />
+  </ItemGroup>
+
 </Project>

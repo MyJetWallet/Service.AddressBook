@@ -11,6 +11,6 @@ namespace Service.AddressBook.Client
         {
         }
 
-        public IHelloService GetHelloService() => CreateGrpcService<IHelloService>();
+        public IAddressBookService GetHelloService() => CreateGrpcService<IAddressBookService>();
     }
 }

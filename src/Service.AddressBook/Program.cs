@@ -19,16 +19,7 @@ namespace Service.AddressBook
         public static SettingsModel Settings { get; private set; }
 
         public static ILoggerFactory LogFactory { get; private set; }
-
-        public static Func<T> ReloadedSettings<T>(Func<SettingsModel, T> getter)
-        {
-            return () =>
-            {
-                var settings = SettingsReader.GetSettings<SettingsModel>(SettingsFileName);
-                var value = getter.Invoke(settings);
-                return value;
-            };
-        }
+        
 
         public static void Main(string[] args)
         {

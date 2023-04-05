@@ -11,7 +11,7 @@ namespace Service.AddressBook.Client
         {
             var factory = new AddressBookClientFactory(grpcServiceUrl);
 
-            builder.RegisterInstance(factory.GetHelloService()).As<IHelloService>().SingleInstance();
+            builder.RegisterInstance(factory.GetHelloService()).As<IAddressBookService>().SingleInstance();
         }
     }
 }
