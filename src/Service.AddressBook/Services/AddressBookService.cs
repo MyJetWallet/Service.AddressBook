@@ -33,9 +33,12 @@ namespace Service.AddressBook.Services
             try
             {
                 var records = await _addressBookRepository.FindAsync(request.OwnerClientId, request.SearchText);
+                var topContacts = await _addressBookRepository.GetListAsync(request.OwnerClientId, 0, 5);
+
                 return new AddressBookListResponse()
                 {
-                    Records = records
+                    Records = records,
+                    TopContacts = topContacts,
                 };
             }
             catch (Exception e)
@@ -65,9 +68,11 @@ namespace Service.AddressBook.Services
             try
             {
                 var records = await _addressBookRepository.GetListAsync(request.OwnerClientId, request.Skip, request.Take);
+                var topContacts = await _addressBookRepository.GetListAsync(request.OwnerClientId, 0, 5);
                 return new AddressBookListResponse()
                 {
-                    Records = records
+                    Records = records,
+                    TopContacts = topContacts
                 };
             }
             catch (Exception e)

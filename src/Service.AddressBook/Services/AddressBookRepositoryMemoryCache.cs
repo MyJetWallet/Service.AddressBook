@@ -48,6 +48,8 @@ namespace Service.AddressBook.Services
                 return new List<AddressBookRecord>();
 
             return _records.Where(e => e.OwnerClientId == ownerClientId)
+                .OrderByDescending(t=>t.TransfersCount)
+                .ThenByDescending(t=>t.LastTs)
                 .Skip(skip)
                 .Take(take)
                 .ToList();
@@ -55,6 +57,8 @@ namespace Service.AddressBook.Services
 
         public async Task UpsertAsync(AddressBookRecord record)
         {
+            record.LastTs = DateTime.UtcNow;
+            
             await using var context = new DatabaseContext(_dbContextOptionsBuilder.Options);
             await context.UpsertAsync(new []{record});
             
