@@ -7,4 +7,3 @@
 ![CI test build](https://github.com/MyJetWallet/Service.AddressBook/workflows/CI%20test%20build/badge.svg)
 
 *Client library:* ![Nuget version](https://img.shields.io/nuget/v/MyJetWallet.Service.AddressBook.Client?label=MyJetWallet.Service.AddressBook.Client&style=social)
-
