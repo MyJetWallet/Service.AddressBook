@@ -42,6 +42,11 @@ namespace Service.AddressBook.Services
             return _records.FirstOrDefault(t => t.OwnerClientId == ownerClientId && t.Name == name);
         }
 
+        public async Task<AddressBookRecord> GetByIbanAsync(string ownerClientId, string iban)
+        {   
+            return _records.FirstOrDefault(t => t.OwnerClientId == ownerClientId && t.Iban == iban);
+        }
+
         public async Task<List<AddressBookRecord>> GetListAsync(string ownerClientId, int skip, int take)
         {
             if (!IsStarted)

@@ -23,12 +23,14 @@ namespace Service.AddressBook.Postgres
             modelBuilder.Entity<AddressBookRecord>().ToTable(AddressBookRecordsTableName);
             modelBuilder.Entity<AddressBookRecord>().HasKey(e => new {e.OwnerClientId, ClientId = e.ContactClientId});
             modelBuilder.Entity<AddressBookRecord>().Property(e => e.LastTs).HasDefaultValue(DateTime.MinValue);
-            modelBuilder.Entity<AddressBookRecord>().Property(e => e.Nickname).IsRequired(true);
-            modelBuilder.Entity<AddressBookRecord>().Property(e => e.Name).IsRequired(true);
+            modelBuilder.Entity<AddressBookRecord>().Property(e => e.Nickname).IsRequired();
+            modelBuilder.Entity<AddressBookRecord>().Property(e => e.Name).IsRequired();
+            modelBuilder.Entity<AddressBookRecord>().Property(e => e.Iban).IsRequired(false);
             
             modelBuilder.Entity<AddressBookRecord>().HasIndex(e => new {e.OwnerClientId, e.Nickname}).IsUnique();
             modelBuilder.Entity<AddressBookRecord>().HasIndex(e => new {e.OwnerClientId, e.Name}).IsUnique();
-            
+            modelBuilder.Entity<AddressBookRecord>().HasIndex(e => new {e.OwnerClientId, e.Iban}).IsUnique();
+
             base.OnModelCreating(modelBuilder);
         }
 

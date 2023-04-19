@@ -27,6 +27,12 @@ namespace Service.AddressBook.Grpc
         Task<OperationResponse> DeleteAsync(DeleteRequest request);
         
         [OperationContract]
-        Task<OperationResponse> CreateAsync(AddRequest request);
+        Task<OperationResponse> CreateWithNicknameAsync(AddNicknameRequest nicknameRequest);
+        
+        [OperationContract]
+        Task<OperationResponse> CreateWithIbanAsync(AddIbanRequest request);
+        
+        [OperationContract]
+        Task<OperationResponse> UpdateContactAsync(UpdateContactRequest request);
     }
 }

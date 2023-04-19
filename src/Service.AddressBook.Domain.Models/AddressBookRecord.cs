@@ -13,5 +13,9 @@ namespace Service.AddressBook.Domain.Models
         [DataMember(Order = 5)] public DateTime LastTs { get; set; }
         [DataMember(Order = 6)] public bool ReceiveApprovalGranted { get; set; }
         [DataMember(Order = 7)] public int TransfersCount { get; set; }
+        [DataMember(Order = 8)] public string Iban { get; set; }
+        [DataMember(Order = 9)] public string Bic { get; set; }
+        [DataMember(Order = 10)] public string BankName { get; set; }
+        [DataMember(Order = 11)] public long Order { get; set; }
     }
 }

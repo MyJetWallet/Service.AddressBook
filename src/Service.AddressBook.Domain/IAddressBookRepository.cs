@@ -9,7 +9,8 @@ public interface IAddressBookRepository
     Task<AddressBookRecord> GetAsync(string ownerClientId, string clientId);
     Task<AddressBookRecord> GetByNicknameAsync(string ownerClientId, string nickname);
     Task<AddressBookRecord> GetByNameAsync(string ownerClientId, string name);
-    
+    Task<AddressBookRecord> GetByIbanAsync(string ownerClientId, string iban);
+
     Task<List<AddressBookRecord>> GetListAsync(string ownerClientId, int skip, int take);
     
     Task UpsertAsync(AddressBookRecord record);
@@ -17,5 +18,4 @@ public interface IAddressBookRepository
     
     Task<List<AddressBookRecord>> FindAsync(string ownerClientId, string searchText);
     Task<List<AddressBookRecord>> GetAllByNicknameAsync(string nickname);
-
 }
