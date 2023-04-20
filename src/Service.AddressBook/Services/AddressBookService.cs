@@ -107,24 +107,24 @@ namespace Service.AddressBook.Services
             _logger.LogInformation("Setting approve for sender {senderClientId} and receiver {receiverClientId}", request.SenderClientId, request.ReceiverClientId);
             try
             {
-                var record = await _addressBookRepository.GetAsync(request.SenderClientId, request.ReceiverClientId);
-                if (record == null)
-                {
-                    _logger.LogError("Cannot find record for sender {senderClientId} and receiver {receiverClientId}", request.SenderClientId, request.ReceiverClientId);
-                    return new OperationResponse()
-                    {
-                        IsSuccess = false,
-                        ErrorMessage = "Cannot find record"
-                    };
-                }
-                record.ReceiveApprovalGranted = true;
-                await _addressBookRepository.UpsertAsync(record);
-
-                await _contactReceivingApprovedPublisher.PublishAsync(new ContactReceivingApproved()
-                {
-                    SenderClientId = request.SenderClientId,
-                    ReceiverClientId = request.ReceiverClientId
-                });
+                // var record = await _addressBookRepository.GetAsync(TODO);
+                // if (record == null)
+                // {
+                //     _logger.LogError("Cannot find record for sender {senderClientId} and receiver {receiverClientId}", request.SenderClientId, request.ReceiverClientId);
+                //     return new OperationResponse()
+                //     {
+                //         IsSuccess = false,
+                //         ErrorMessage = "Cannot find record"
+                //     };
+                // }
+                // record.ReceiveApprovalGranted = true;
+                // await _addressBookRepository.UpsertAsync(record);
+                //
+                // await _contactReceivingApprovedPublisher.PublishAsync(new ContactReceivingApproved()
+                // {
+                //     SenderClientId = request.SenderClientId,
+                //     ReceiverClientId = request.ReceiverClientId
+                // });
                 
                 return new OperationResponse()
                 {
@@ -202,7 +202,7 @@ namespace Service.AddressBook.Services
                 var record = new AddressBookRecord()
                 {
                     OwnerClientId = nicknameRequest.OwnerClientId, 
-                    ContactClientId = client.ClientId,
+                    ContactId = Guid.NewGuid().ToString("N"),
                     Nickname = nicknameRequest.Nickname,
                     Name = nicknameRequest.Name,
                     Order = DateTime.UtcNow.UnixTime(),
@@ -256,7 +256,7 @@ namespace Service.AddressBook.Services
                 var record = new AddressBookRecord
                 {
                     OwnerClientId = request.OwnerClientId,
-                    ContactClientId = request.ClientId,
+                    ContactId = Guid.NewGuid().ToString("N"),
                     Nickname = profile.Nickname,
                     Iban = request.Iban,
                     Bic = request.Bic,
@@ -285,13 +285,13 @@ namespace Service.AddressBook.Services
 
         public async Task<OperationResponse> UpdateContactAsync(UpdateContactRequest request)
         {
-            _logger.LogInformation("Requested update for client {clientId} and contact {contactId}", request.OwnerClientId, request.ContactClientId);
+            _logger.LogInformation("Requested update for client {clientId} and contact {contactId}", request.OwnerClientId, request.ContactId);
             try
             {
-                var record = await _addressBookRepository.GetAsync(request.OwnerClientId, request.ContactClientId);
+                var record = await _addressBookRepository.GetAsync(request.ContactId);
                 if (record == null)
                 {
-                    _logger.LogError("Cannot find record for client {clientId} and contact {contactId}", request.OwnerClientId, request.ContactClientId);
+                    _logger.LogError("Cannot find record for client {clientId} and contact {contactId}", request.OwnerClientId, request.ContactId);
                     return new OperationResponse()
                     {
                         IsSuccess = false,
@@ -317,7 +317,7 @@ namespace Service.AddressBook.Services
             }
             catch (Exception e)
             {
-                _logger.LogError(e, "Cannot update for client {clientId} and contact {contactId}", request.OwnerClientId, request.ContactClientId);
+                _logger.LogError(e, "Cannot update for client {clientId} and contact {contactId}", request.OwnerClientId, request.ContactId);
                 return new OperationResponse()
                 {
                     IsSuccess = false,

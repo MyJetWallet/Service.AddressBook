@@ -6,7 +6,7 @@ namespace Service.AddressBook.Domain;
 
 public interface IAddressBookRepository
 {
-    Task<AddressBookRecord> GetAsync(string ownerClientId, string clientId);
+    Task<AddressBookRecord> GetAsync(string contactId);
     Task<AddressBookRecord> GetByNicknameAsync(string ownerClientId, string nickname);
     Task<AddressBookRecord> GetByNameAsync(string ownerClientId, string name);
     Task<AddressBookRecord> GetByIbanAsync(string ownerClientId, string iban);

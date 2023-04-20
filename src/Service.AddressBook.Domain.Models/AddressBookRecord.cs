@@ -7,7 +7,7 @@ namespace Service.AddressBook.Domain.Models
     public class AddressBookRecord
     {
         [DataMember(Order = 1)] public string OwnerClientId { get; set; }
-        [DataMember(Order = 2)] public string ContactClientId { get; set; }
+        [DataMember(Order = 2)] public string ContactId { get; set; }
         [DataMember(Order = 3)] public string Nickname { get; set; }
         [DataMember(Order = 4)] public string Name { get; set; }
         [DataMember(Order = 5)] public DateTime LastTs { get; set; }
@@ -17,5 +17,6 @@ namespace Service.AddressBook.Domain.Models
         [DataMember(Order = 9)] public string Bic { get; set; }
         [DataMember(Order = 10)] public string BankName { get; set; }
         [DataMember(Order = 11)] public long Order { get; set; }
+        
     }
 }

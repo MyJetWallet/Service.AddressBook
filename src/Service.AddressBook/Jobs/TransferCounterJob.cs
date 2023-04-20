@@ -20,16 +20,16 @@ namespace Service.AddressBook.Jobs
 
         private async ValueTask HandleTransfer(Transfer transfer)
         {
-            if(transfer.Status != TransferStatus.Completed || transfer.TransferType != TransferType.NicknameTransfer)
-                return;
-
-            var record = await _addressBookRepository.GetAsync(transfer.ClientId, transfer.DestinationClientId);
-            if(record == null)
-                return;
-            
-            _logger.LogInformation("Increment transfer counter for {clientId} -> {destinationClientId}", transfer.ClientId, transfer.DestinationClientId);
-            record.TransfersCount++;
-            await _addressBookRepository.UpsertAsync(record);
+            // if(transfer.Status != TransferStatus.Completed || transfer.TransferType != TransferType.NicknameTransfer)
+            //     return;
+            //
+            // var record = await _addressBookRepository.GetAsync(TODO);
+            // if(record == null)
+            //     return;
+            //
+            // _logger.LogInformation("Increment transfer counter for {clientId} -> {destinationClientId}", transfer.ClientId, transfer.DestinationClientId);
+            // record.TransfersCount++;
+            // await _addressBookRepository.UpsertAsync(record);
         }
     }
 }

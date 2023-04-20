@@ -27,9 +27,9 @@ namespace Service.AddressBook.Services
 
         private static bool IsStarted { get; set; }
 
-        public async Task<AddressBookRecord> GetAsync(string ownerClientId, string clientId)
+        public async Task<AddressBookRecord> GetAsync(string contactId)
         {
-            return _records.FirstOrDefault(t => t.OwnerClientId == ownerClientId && t.ContactClientId == clientId);
+            return _records.FirstOrDefault(t => t.ContactId == contactId);
         }
 
         public async Task<AddressBookRecord> GetByNicknameAsync(string ownerClientId, string nickname)
@@ -67,7 +67,7 @@ namespace Service.AddressBook.Services
             await using var context = new DatabaseContext(_dbContextOptionsBuilder.Options);
             await context.UpsertAsync(new []{record});
             
-            var oldRecord = _records.FirstOrDefault(e => e.OwnerClientId == record.OwnerClientId && e.ContactClientId == record.ContactClientId);
+            var oldRecord = _records.FirstOrDefault(e => e.OwnerClientId == record.OwnerClientId && e.ContactId == record.ContactId);
             if (oldRecord != null)
                 _records.Remove(oldRecord);
             
@@ -77,13 +77,13 @@ namespace Service.AddressBook.Services
         public async Task DeleteAsync(string ownerClientId, string clientId)
         {
             await using var context = new DatabaseContext(_dbContextOptionsBuilder.Options);
-            var record = await context.AddressBook.FirstOrDefaultAsync(e => e.OwnerClientId == ownerClientId && e.ContactClientId == clientId);
+            var record = await context.AddressBook.FirstOrDefaultAsync(e => e.OwnerClientId == ownerClientId && e.ContactId == clientId);
             if (record != null)
                 context.AddressBook.Remove(record);
             
             await context.SaveChangesAsync();
             
-            var oldRecord = _records.FirstOrDefault(e => e.OwnerClientId == ownerClientId && e.ContactClientId == clientId);
+            var oldRecord = _records.FirstOrDefault(e => e.OwnerClientId == ownerClientId && e.ContactId == clientId);
             if (oldRecord != null)
                 _records.Remove(oldRecord);
         }
