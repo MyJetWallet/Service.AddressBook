@@ -23,7 +23,7 @@ namespace Service.AddressBook.Postgres
             modelBuilder.Entity<AddressBookRecord>().ToTable(AddressBookRecordsTableName);
             modelBuilder.Entity<AddressBookRecord>().HasKey(e => e.ContactId);
             modelBuilder.Entity<AddressBookRecord>().Property(e => e.LastTs).HasDefaultValue(DateTime.MinValue);
-            modelBuilder.Entity<AddressBookRecord>().Property(e => e.Nickname).IsRequired();
+            modelBuilder.Entity<AddressBookRecord>().Property(e => e.Nickname).IsRequired(false);
             modelBuilder.Entity<AddressBookRecord>().Property(e => e.Name).IsRequired();
             modelBuilder.Entity<AddressBookRecord>().Property(e => e.Iban).IsRequired(false);
             
