@@ -248,17 +248,11 @@ namespace Service.AddressBook.Services
                         IsSuccess = false,
                         ErrorMessage = "Record already exists"
                     };
-
-                var profile = await _clientProfileService.GetOrCreateProfile(new GetClientProfileRequest()
-                {
-                    ClientId = request.ClientId
-                });
                 
                 var record = new AddressBookRecord
                 {
                     OwnerClientId = request.OwnerClientId,
                     ContactId = Guid.NewGuid().ToString("N"),
-                    Nickname = profile.Nickname,
                     Iban = request.Iban,
                     Bic = request.Bic,
                     BankName = request.BankName,
