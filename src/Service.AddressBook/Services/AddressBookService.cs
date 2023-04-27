@@ -325,7 +325,22 @@ namespace Service.AddressBook.Services
                 if(request.Name != null)
                     record.Name = request.Name;
                 if(request.Iban != null)
+                {
+                    var ibanCheck = await _ibanService.CheckSepaIbanRequisiteAsync(new IbanInfoRequest
+                    {
+                        Iban = request.Iban
+                    });
+                
+                    if(!ibanCheck.IsSuccess)
+                        return new OperationResponse()
+                        {
+                            IsSuccess = false,
+                            ErrorMessage = "Invalid IBAN",
+                            ErrorCode = GlobalSendErrorCode.InvalidIban
+                        };
+                    
                     record.Iban = request.Iban;
+                }
                 if(request.Bic != null)
                     record.Bic = request.Bic;
                 if(request.BankName != null)
