@@ -25,6 +25,8 @@ namespace Service.AddressBook.Settings
         
         [YamlProperty("AddressBook.ClientProfileGrpcServiceUrl")]
         public string ClientProfileGrpcServiceUrl { get; set; }
-
+        
+        [YamlProperty("AddressBook.ClearjunctionGrpcServiceUrl")]
+        public string ClearjunctionGrpcServiceUrl { get; set; }
     }
 }

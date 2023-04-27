@@ -9,6 +9,8 @@ using Service.AddressBook.Domain.Models.Messages;
 using Service.AddressBook.Grpc;
 using Service.AddressBook.Grpc.Models;
 using Service.AddressBook.Settings;
+using Service.Clearjunction.Grpc;
+using Service.Clearjunction.Grpc.Models;
 using Service.ClientProfile.Grpc;
 using Service.ClientProfile.Grpc.Models.Requests;
 
@@ -20,12 +22,14 @@ namespace Service.AddressBook.Services
         private readonly IAddressBookRepository _addressBookRepository;
         private readonly IClientProfileService _clientProfileService;
         private readonly IServiceBusPublisher<ContactReceivingApproved> _contactReceivingApprovedPublisher;
-        public AddressBookService(ILogger<AddressBookService> logger, IAddressBookRepository addressBookRepository, IClientProfileService clientProfileService, IServiceBusPublisher<ContactReceivingApproved> contactReceivingApprovedPublisher)
+        private readonly IIbanService _ibanService;
+        public AddressBookService(ILogger<AddressBookService> logger, IAddressBookRepository addressBookRepository, IClientProfileService clientProfileService, IServiceBusPublisher<ContactReceivingApproved> contactReceivingApprovedPublisher, IIbanService ibanService)
         {
             _logger = logger;
             _addressBookRepository = addressBookRepository;
             _clientProfileService = clientProfileService;
             _contactReceivingApprovedPublisher = contactReceivingApprovedPublisher;
+            _ibanService = ibanService;
         }
 
         public async Task<AddressBookListResponse> SearchAsync(SearchRequest request)
@@ -247,7 +251,7 @@ namespace Service.AddressBook.Services
                         ErrorMessage = "Record already exists",
                         ErrorCode = GlobalSendErrorCode.IbanAlreadyUsed
                     };
-                
+
                 existingRecord = await _addressBookRepository.GetByNameAsync(request.OwnerClientId, request.Name);
                 if (existingRecord != null)
                     return new OperationResponse()
@@ -256,14 +260,27 @@ namespace Service.AddressBook.Services
                         ErrorMessage = "Record already exists",
                         ErrorCode = GlobalSendErrorCode.NameAlreadyUsed
                     };
+
+                var ibanCheck = await _ibanService.CheckSepaIbanRequisiteAsync(new IbanInfoRequest
+                {
+                    Iban = request.Iban
+                });
+                
+                if(!ibanCheck.IsSuccess)
+                    return new OperationResponse()
+                    {
+                        IsSuccess = false,
+                        ErrorMessage = "Invalid IBAN",
+                        ErrorCode = GlobalSendErrorCode.InvalidIban
+                    };
                 
                 var record = new AddressBookRecord
                 {
                     OwnerClientId = request.OwnerClientId,
                     ContactId = Guid.NewGuid().ToString("N"),
                     Iban = request.Iban,
-                    Bic = request.Bic,
-                    BankName = request.BankName,
+                    Bic = ibanCheck.Data.BankSwiftCode,
+                    BankName = ibanCheck.Data.BankName,
                     Order = DateTime.UtcNow.UnixTime(),
                     Name = request.Name,
                 };

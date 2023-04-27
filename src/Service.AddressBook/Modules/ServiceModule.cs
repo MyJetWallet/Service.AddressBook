@@ -7,6 +7,7 @@ using Service.AddressBook.Domain;
 using Service.AddressBook.Domain.Models.Messages;
 using Service.AddressBook.Jobs;
 using Service.AddressBook.Services;
+using Service.Clearjunction.Client;
 using Service.ClientProfile.Client;
 using Service.InternalTransfer.Domain.Models;
 
@@ -32,6 +33,8 @@ namespace Service.AddressBook.Modules
                 .SingleInstance();
 
             builder.RegisterType<TransferCounterJob>().AsSelf().SingleInstance().AutoActivate();
+            
+            builder.RegisterClearjunctionClient(Program.Settings.ClearjunctionGrpcServiceUrl);
         }
     }
 }
