@@ -73,7 +73,7 @@ namespace Service.AddressBook.Postgres.Migrations
                     b.HasIndex("OwnerClientId", "Nickname")
                         .IsUnique();
 
-                    b.ToTable("addressbok", "addressbook");
+                    b.ToTable("addressbook", "addressbook");
                 });
 #pragma warning restore 612, 618
         }

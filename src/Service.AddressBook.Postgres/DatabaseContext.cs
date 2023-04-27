@@ -8,7 +8,7 @@ namespace Service.AddressBook.Postgres
     {
         public const string Schema = "addressbook";
 
-        public const string AddressBookRecordsTableName = "addressbok";
+        public const string AddressBookRecordsTableName = "addressbook";
 
         public DbSet<AddressBookRecord> AddressBook { get; set; }
         

@@ -12,8 +12,8 @@ using Service.AddressBook.Postgres;
 namespace Service.AddressBook.Postgres.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20230419153227_IbanFields")]
-    partial class IbanFields
+    [Migration("20230427105140_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -21,17 +21,14 @@ namespace Service.AddressBook.Postgres.Migrations
 #pragma warning disable 612, 618
             modelBuilder
                 .HasDefaultSchema("addressbook")
-                .HasAnnotation("ProductVersion", "7.0.4")
+                .HasAnnotation("ProductVersion", "7.0.5")
                 .HasAnnotation("Relational:MaxIdentifierLength", 63);
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
             modelBuilder.Entity("Service.AddressBook.Domain.Models.AddressBookRecord", b =>
                 {
-                    b.Property<string>("OwnerClientId")
-                        .HasColumnType("text");
-
-                    b.Property<string>("ContactClientId")
+                    b.Property<string>("ContactId")
                         .HasColumnType("text");
 
                     b.Property<string>("BankName")
@@ -59,13 +56,16 @@ namespace Service.AddressBook.Postgres.Migrations
                     b.Property<long>("Order")
                         .HasColumnType("bigint");
 
+                    b.Property<string>("OwnerClientId")
+                        .HasColumnType("text");
+
                     b.Property<bool>("ReceiveApprovalGranted")
                         .HasColumnType("boolean");
 
                     b.Property<int>("TransfersCount")
                         .HasColumnType("integer");
 
-                    b.HasKey("OwnerClientId", "ContactClientId");
+                    b.HasKey("ContactId");
 
                     b.HasIndex("OwnerClientId", "Iban")
                         .IsUnique();
@@ -76,7 +76,7 @@ namespace Service.AddressBook.Postgres.Migrations
                     b.HasIndex("OwnerClientId", "Nickname")
                         .IsUnique();
 
-                    b.ToTable("addressbok", "addressbook");
+                    b.ToTable("addressbook", "addressbook");
                 });
 #pragma warning restore 612, 618
         }

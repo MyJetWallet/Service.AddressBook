@@ -150,7 +150,7 @@ namespace Service.AddressBook.Services
                 await _addressBookRepository.DeleteAsync(request.OwnerClientId, request.RemoveContactClientId);
                 return new OperationResponse()
                 {
-                    IsSuccess = true
+                    IsSuccess = true,
                 };
             }
             catch (Exception e)
@@ -212,7 +212,8 @@ namespace Service.AddressBook.Services
                 
                 return new OperationResponse()
                 {
-                    IsSuccess = true
+                    IsSuccess = true,
+                    Record = record
                 };
             }
             catch (Exception e)
@@ -269,7 +270,8 @@ namespace Service.AddressBook.Services
                 
                 return new OperationResponse()
                 {
-                    IsSuccess = true
+                    IsSuccess = true,
+                    Record = record
                 };
             }
             catch (Exception e)
