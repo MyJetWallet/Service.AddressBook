@@ -47,17 +47,27 @@ namespace Service.AddressBook.Services
             return _records.FirstOrDefault(t => t.OwnerClientId == ownerClientId && t.Iban == iban);
         }
 
-        public async Task<List<AddressBookRecord>> GetListAsync(string ownerClientId, int skip, int take)
+        public async Task<List<AddressBookRecord>> GetListAsync(string ownerClientId, int skip, int take, bool withIban,
+            bool withNickname)
         {
             if (!IsStarted)
                 return new List<AddressBookRecord>();
 
-            return _records.Where(e => e.OwnerClientId == ownerClientId)
-                .OrderByDescending(t=>t.TransfersCount)
-                .ThenByDescending(t=>t.LastTs)
+            var records = _records.Where(e => e.OwnerClientId == ownerClientId).ToList();
+            
+            if(withNickname)
+                records = records.Where(t=>!string.IsNullOrEmpty(t.Nickname)).ToList();
+            
+            if(withIban)
+                records = records.Where(t=>!string.IsNullOrEmpty(t.Iban)).ToList();
+            
+            records = records          
+                .OrderByDescending(t=>t.Order)
                 .Skip(skip)
                 .Take(take)
                 .ToList();
+
+            return records;
         }
 
         public async Task UpsertAsync(AddressBookRecord record)
@@ -88,16 +98,24 @@ namespace Service.AddressBook.Services
                 _records.Remove(oldRecord);
         }
 
-        public async Task<List<AddressBookRecord>> FindAsync(string ownerClientId, string searchText)
+        public async Task<List<AddressBookRecord>> FindAsync(string ownerClientId, string searchText, bool withIban, bool withNickname)
         {
             if (!IsStarted)
                 return new List<AddressBookRecord>();
 
-            return _records.Where(e =>
+            var records = _records.Where(e =>
                     e.OwnerClientId == ownerClientId &&
                     (e.Nickname.Contains(searchText, StringComparison.InvariantCultureIgnoreCase) || 
                      e.Name.Contains(searchText, StringComparison.InvariantCultureIgnoreCase)))
                 .ToList();
+            
+            if(withIban)
+                records = records.Where(e => !string.IsNullOrWhiteSpace(e.Iban)).ToList();
+            
+            if(withNickname)
+                records = records.Where(e => !string.IsNullOrWhiteSpace(e.Nickname)).ToList();
+
+            return records;
         }
 
         public async Task<List<AddressBookRecord>> GetAllByNicknameAsync(string nickname)

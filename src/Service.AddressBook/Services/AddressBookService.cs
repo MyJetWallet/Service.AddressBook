@@ -33,8 +33,8 @@ namespace Service.AddressBook.Services
             _logger.LogInformation("Requested search for client {clientId} with text {searchText}", request.OwnerClientId, request.SearchText);
             try
             {
-                var records = await _addressBookRepository.FindAsync(request.OwnerClientId, request.SearchText);
-                var topContacts = await _addressBookRepository.GetListAsync(request.OwnerClientId, 0, 5);
+                var records = await _addressBookRepository.FindAsync(request.OwnerClientId, request.SearchText, request.WithIban, request.WithNickname);
+                var topContacts = await _addressBookRepository.GetListAsync(request.OwnerClientId, 0, 5, request.WithIban, request.WithNickname);
 
                 return new AddressBookListResponse()
                 {
@@ -68,8 +68,8 @@ namespace Service.AddressBook.Services
             _logger.LogInformation("Requested get list for client {clientId}", request.OwnerClientId);
             try
             {
-                var records = await _addressBookRepository.GetListAsync(request.OwnerClientId, request.Skip, request.Take);
-                var topContacts = await _addressBookRepository.GetListAsync(request.OwnerClientId, 0, 5);
+                var records = await _addressBookRepository.GetListAsync(request.OwnerClientId, request.Skip, request.Take, request.WithIban, request.WithNickname);
+                var topContacts = await _addressBookRepository.GetListAsync(request.OwnerClientId, 0, 5,  request.WithIban, request.WithNickname);
                 return new AddressBookListResponse()
                 {
                     Records = records,
