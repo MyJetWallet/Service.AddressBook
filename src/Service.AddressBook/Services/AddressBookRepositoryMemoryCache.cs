@@ -104,11 +104,11 @@ namespace Service.AddressBook.Services
                 return new List<AddressBookRecord>();
 
             var records = _records.Where(e =>
-                    e.OwnerClientId == ownerClientId &&
-                    (e.Nickname.Contains(searchText, StringComparison.InvariantCultureIgnoreCase) || 
-                     e.Name.Contains(searchText, StringComparison.InvariantCultureIgnoreCase)))
+                    e.OwnerClientId == ownerClientId)
                 .ToList();
             
+            if(!string.IsNullOrWhiteSpace(searchText))
+                records = records.Where(e => e.Name.Contains(searchText, StringComparison.InvariantCultureIgnoreCase) || e.Iban.Contains(searchText, StringComparison.InvariantCultureIgnoreCase) || e.Nickname.Contains(searchText, StringComparison.InvariantCultureIgnoreCase)).ToList();
             if(withIban)
                 records = records.Where(e => !string.IsNullOrWhiteSpace(e.Iban)).ToList();
             
