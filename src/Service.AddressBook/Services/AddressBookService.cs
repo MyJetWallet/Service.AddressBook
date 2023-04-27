@@ -137,7 +137,8 @@ namespace Service.AddressBook.Services
                 return new OperationResponse()
                 {
                     IsSuccess = false,
-                    ErrorMessage = e.Message
+                    ErrorMessage = e.Message,
+                    ErrorCode = GlobalSendErrorCode.InternalError
                 };
             }
         }
@@ -159,7 +160,8 @@ namespace Service.AddressBook.Services
                 return new OperationResponse()
                 {
                     IsSuccess = false,
-                    ErrorMessage = e.Message
+                    ErrorMessage = e.Message,
+                    ErrorCode = GlobalSendErrorCode.InternalError
                 };
             }
         }
@@ -178,7 +180,8 @@ namespace Service.AddressBook.Services
                     return new OperationResponse()
                     {
                         IsSuccess = false,
-                        ErrorMessage = "Client not found"
+                        ErrorMessage = "Client not found",
+                        ErrorCode = GlobalSendErrorCode.InvalidNickname,
                     };
 
                 var existingRecord =
@@ -187,7 +190,8 @@ namespace Service.AddressBook.Services
                     return new OperationResponse()
                     {
                         IsSuccess = false,
-                        ErrorMessage = "Record already exists"
+                        ErrorMessage = "Record already exists",
+                        ErrorCode = GlobalSendErrorCode.NicknameAlreadyUsed,
                     };
                 
                 existingRecord = await _addressBookRepository.GetByNameAsync(nicknameRequest.OwnerClientId, nicknameRequest.Name);
@@ -195,7 +199,8 @@ namespace Service.AddressBook.Services
                     return new OperationResponse()
                     {
                         IsSuccess = false,
-                        ErrorMessage = "Record already exists"
+                        ErrorMessage = "Record already exists",
+                        ErrorCode = GlobalSendErrorCode.NameAlreadyUsed,
                     };
                 
                 
@@ -222,7 +227,8 @@ namespace Service.AddressBook.Services
                 return new OperationResponse()
                 {
                     IsSuccess = false,
-                    ErrorMessage = e.Message
+                    ErrorMessage = e.Message,
+                    ErrorCode = GlobalSendErrorCode.InternalError
                 };
             }
         }
@@ -238,7 +244,8 @@ namespace Service.AddressBook.Services
                     return new OperationResponse()
                     {
                         IsSuccess = false,
-                        ErrorMessage = "Record already exists"
+                        ErrorMessage = "Record already exists",
+                        ErrorCode = GlobalSendErrorCode.IbanAlreadyUsed
                     };
                 
                 existingRecord = await _addressBookRepository.GetByNameAsync(request.OwnerClientId, request.Name);
@@ -246,7 +253,8 @@ namespace Service.AddressBook.Services
                     return new OperationResponse()
                     {
                         IsSuccess = false,
-                        ErrorMessage = "Record already exists"
+                        ErrorMessage = "Record already exists",
+                        ErrorCode = GlobalSendErrorCode.NameAlreadyUsed
                     };
                 
                 var record = new AddressBookRecord
@@ -274,7 +282,8 @@ namespace Service.AddressBook.Services
                 return new OperationResponse()
                 {
                     IsSuccess = false,
-                    ErrorMessage = e.Message
+                    ErrorMessage = e.Message,
+                    ErrorCode = GlobalSendErrorCode.InternalError
                 };
             }
         }
@@ -291,7 +300,8 @@ namespace Service.AddressBook.Services
                     return new OperationResponse()
                     {
                         IsSuccess = false,
-                        ErrorMessage = "Cannot find record"
+                        ErrorMessage = "Cannot find record",
+                        ErrorCode = GlobalSendErrorCode.ContactNotFound
                     };
                 }
 
@@ -317,7 +327,8 @@ namespace Service.AddressBook.Services
                 return new OperationResponse()
                 {
                     IsSuccess = false,
-                    ErrorMessage = e.Message
+                    ErrorMessage = e.Message,
+                    ErrorCode = GlobalSendErrorCode.InternalError
                 };
             }
         }
