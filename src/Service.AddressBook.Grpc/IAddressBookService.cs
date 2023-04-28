@@ -34,5 +34,8 @@ namespace Service.AddressBook.Grpc
         
         [OperationContract]
         Task<OperationResponse> UpdateContactAsync(UpdateContactRequest request);
+        
+        [OperationContract]
+        Task<OperationResponse> GetByIdAsync(GetByIdRequest request);
     }
 }

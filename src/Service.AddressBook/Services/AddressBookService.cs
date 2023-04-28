@@ -364,5 +364,37 @@ namespace Service.AddressBook.Services
                 };
             }
         }
+
+        public async Task<OperationResponse> GetByIdAsync(GetByIdRequest request)
+        {
+            _logger.LogInformation("Requested get by id for  contact {contactId}",  request.ContactId);
+            try
+            {
+                var record = await _addressBookRepository.GetAsync(request.ContactId);
+                if(record == null)
+                    return new OperationResponse()
+                    {
+                        IsSuccess = false,
+                        ErrorMessage = "Record not found",
+                        ErrorCode = GlobalSendErrorCode.ContactNotFound
+                    };
+
+                return new OperationResponse()
+                {
+                    IsSuccess = true,
+                    Record = record
+                };
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Cannot get by id for contact {contactId}", request.ContactId);
+                return new OperationResponse()
+                {
+                    IsSuccess = false,
+                    ErrorMessage = e.Message,
+                    ErrorCode = GlobalSendErrorCode.InternalError
+                };
+            }
+        }
     }
 }
