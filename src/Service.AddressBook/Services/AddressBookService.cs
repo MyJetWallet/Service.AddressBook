@@ -322,10 +322,32 @@ namespace Service.AddressBook.Services
                     };
                 }
 
-                if(request.Name != null)
-                    record.Name = request.Name;
-                if(request.Iban != null)
+                if(!string.IsNullOrWhiteSpace(request.Name) && request.Name != record.Name)
                 {
+                    var existing = await _addressBookRepository.GetByNameAsync(request.OwnerClientId, request.Name);
+                    if (existing != null)
+                    {
+                        return new OperationResponse()
+                        {
+                            IsSuccess = false,
+                            ErrorCode = GlobalSendErrorCode.NameAlreadyUsed
+                        };
+                    }
+                    record.Name = request.Name;
+                }
+                
+                if(!string.IsNullOrWhiteSpace(request.Iban) && request.Iban != record.Iban)
+                {
+                    var existing = await _addressBookRepository.GetByIbanAsync(request.OwnerClientId, request.Iban);
+                    if (existing != null)
+                    {
+                        return new OperationResponse()
+                        {
+                            IsSuccess = false,
+                            ErrorCode = GlobalSendErrorCode.IbanAlreadyUsed
+                        };
+                    }
+                    
                     var ibanCheck = await _ibanService.CheckSepaIbanRequisiteAsync(new IbanInfoRequest
                     {
                         Iban = request.Iban
@@ -341,10 +363,6 @@ namespace Service.AddressBook.Services
                     
                     record.Iban = request.Iban;
                 }
-                if(request.Bic != null)
-                    record.Bic = request.Bic;
-                if(request.BankName != null)
-                    record.BankName = request.BankName;
                 
                 await _addressBookRepository.UpsertAsync(record);
                 
