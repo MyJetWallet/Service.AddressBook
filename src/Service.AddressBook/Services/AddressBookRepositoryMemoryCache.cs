@@ -19,7 +19,8 @@ namespace Service.AddressBook.Services
 
         private static HashSet<AddressBookRecord> _records = new HashSet<AddressBookRecord>();
 
-        public AddressBookRepositoryMemoryCache(ILogger<AddressBookRepositoryMemoryCache> logger, DbContextOptionsBuilder<DatabaseContext> dbContextOptionsBuilder)
+        public AddressBookRepositoryMemoryCache(ILogger<AddressBookRepositoryMemoryCache> logger,
+            DbContextOptionsBuilder<DatabaseContext> dbContextOptionsBuilder)
         {
             _logger = logger;
             _dbContextOptionsBuilder = dbContextOptionsBuilder;
@@ -34,7 +35,7 @@ namespace Service.AddressBook.Services
 
         public async Task<AddressBookRecord> GetByNicknameAsync(string ownerClientId, string nickname)
         {
-            return  _records.FirstOrDefault(t => t.OwnerClientId == ownerClientId && t.Nickname == nickname);
+            return _records.FirstOrDefault(t => t.OwnerClientId == ownerClientId && t.Nickname == nickname);
         }
 
         public async Task<AddressBookRecord> GetByNameAsync(string ownerClientId, string name)
@@ -43,7 +44,7 @@ namespace Service.AddressBook.Services
         }
 
         public async Task<AddressBookRecord> GetByIbanAsync(string ownerClientId, string iban)
-        {   
+        {
             return _records.FirstOrDefault(t => t.OwnerClientId == ownerClientId && t.Iban == iban);
         }
 
@@ -54,15 +55,15 @@ namespace Service.AddressBook.Services
                 return new List<AddressBookRecord>();
 
             var records = _records.Where(e => e.OwnerClientId == ownerClientId).ToList();
-            
-            if(withNickname)
-                records = records.Where(t=>!string.IsNullOrEmpty(t.Nickname)).ToList();
-            
-            if(withIban)
-                records = records.Where(t=>!string.IsNullOrEmpty(t.Iban)).ToList();
-            
-            records = records          
-                .OrderByDescending(t=>t.Order)
+
+            if (withNickname)
+                records = records.Where(t => !string.IsNullOrEmpty(t.Nickname)).ToList();
+
+            if (withIban)
+                records = records.Where(t => !string.IsNullOrEmpty(t.Iban)).ToList();
+
+            records = records
+                .OrderByDescending(t => t.Order)
                 .Skip(skip)
                 .Take(take)
                 .ToList();
@@ -73,32 +74,36 @@ namespace Service.AddressBook.Services
         public async Task UpsertAsync(AddressBookRecord record)
         {
             record.LastTs = DateTime.UtcNow;
-            
+
             await using var context = new DatabaseContext(_dbContextOptionsBuilder.Options);
-            await context.UpsertAsync(new []{record});
-            
-            var oldRecord = _records.FirstOrDefault(e => e.OwnerClientId == record.OwnerClientId && e.ContactId == record.ContactId);
+            await context.UpsertAsync(new[] {record});
+
+            var oldRecord = _records.FirstOrDefault(e =>
+                e.OwnerClientId == record.OwnerClientId && e.ContactId == record.ContactId);
             if (oldRecord != null)
                 _records.Remove(oldRecord);
-            
+
             _records.Add(record);
         }
 
         public async Task DeleteAsync(string ownerClientId, string clientId)
         {
             await using var context = new DatabaseContext(_dbContextOptionsBuilder.Options);
-            var record = await context.AddressBook.FirstOrDefaultAsync(e => e.OwnerClientId == ownerClientId && e.ContactId == clientId);
+            var record =
+                await context.AddressBook.FirstOrDefaultAsync(e =>
+                    e.OwnerClientId == ownerClientId && e.ContactId == clientId);
             if (record != null)
                 context.AddressBook.Remove(record);
-            
+
             await context.SaveChangesAsync();
-            
+
             var oldRecord = _records.FirstOrDefault(e => e.OwnerClientId == ownerClientId && e.ContactId == clientId);
             if (oldRecord != null)
                 _records.Remove(oldRecord);
         }
 
-        public async Task<List<AddressBookRecord>> FindAsync(string ownerClientId, string searchText, bool withIban, bool withNickname)
+        public async Task<List<AddressBookRecord>> FindAsync(string ownerClientId, string searchText, bool withIban,
+            bool withNickname)
         {
             if (!IsStarted)
                 return new List<AddressBookRecord>();
@@ -106,13 +111,18 @@ namespace Service.AddressBook.Services
             var records = _records.Where(e =>
                     e.OwnerClientId == ownerClientId)
                 .ToList();
-            
-            if(!string.IsNullOrWhiteSpace(searchText))
-                records = records.Where(e => e.Name.Contains(searchText, StringComparison.InvariantCultureIgnoreCase) || e.Iban.Contains(searchText, StringComparison.InvariantCultureIgnoreCase) || e.Nickname.Contains(searchText, StringComparison.InvariantCultureIgnoreCase)).ToList();
-            if(withIban)
+
+            if (!string.IsNullOrWhiteSpace(searchText))
+            {
+                records = records.Where(e =>
+                    (e.Name?.Contains(searchText, StringComparison.InvariantCultureIgnoreCase) ?? false) ||
+                    (e.Iban?.Contains(searchText, StringComparison.InvariantCultureIgnoreCase) ?? false)||
+                    (e.Nickname?.Contains(searchText, StringComparison.InvariantCultureIgnoreCase) ?? false)).ToList();
+            }
+            if (withIban)
                 records = records.Where(e => !string.IsNullOrWhiteSpace(e.Iban)).ToList();
-            
-            if(withNickname)
+
+            if (withNickname)
                 records = records.Where(e => !string.IsNullOrWhiteSpace(e.Nickname)).ToList();
 
             return records;
@@ -122,7 +132,7 @@ namespace Service.AddressBook.Services
         {
             if (!IsStarted)
                 return new List<AddressBookRecord>();
-            
+
             return _records.Where(t => t.Nickname == nickname).ToList();
         }
 
@@ -140,11 +150,11 @@ namespace Service.AddressBook.Services
                     .Skip(offset)
                     .Take(limit)
                     .ToListAsync();
-                
+
                 _records.UnionWith(response);
                 offset += response.Count;
             } while (response.Any());
-            
+
             sw.Stop();
             _logger.LogInformation("Updated in-memory cache for address book in {time} ms", sw.ElapsedMilliseconds);
             IsStarted = true;
