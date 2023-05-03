@@ -363,6 +363,9 @@ namespace Service.AddressBook.Services
                     
                     record.Iban = request.Iban;
                 }
+
+                record.Order = DateTime.UtcNow.UnixTime();
+
                 
                 await _addressBookRepository.UpsertAsync(record);
                 
