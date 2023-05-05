@@ -261,26 +261,21 @@ namespace Service.AddressBook.Services
                         ErrorCode = GlobalSendErrorCode.NameAlreadyUsed
                     };
 
-                var ibanCheck = await _ibanService.CheckSepaIbanRequisiteAsync(new IbanInfoRequest
-                {
-                    Iban = request.Iban
-                });
-                
-                if(!ibanCheck.IsSuccess)
+                var (error, ibanCheck) = await CheckIban(request.Iban);
+                if (error != GlobalSendErrorCode.OK)
                     return new OperationResponse()
                     {
                         IsSuccess = false,
-                        ErrorMessage = "Invalid IBAN",
-                        ErrorCode = GlobalSendErrorCode.InvalidIban
+                        ErrorCode = error
                     };
-                
+
                 var record = new AddressBookRecord
                 {
                     OwnerClientId = request.OwnerClientId,
                     ContactId = Guid.NewGuid().ToString("N"),
                     Iban = request.Iban,
-                    Bic = ibanCheck.Data.BankSwiftCode,
-                    BankName = ibanCheck.Data.BankName,
+                    Bic = ibanCheck.BankSwiftCode,
+                    BankName = ibanCheck.BankName,
                     Order = DateTime.UtcNow.UnixTime(),
                     Name = request.Name,
                 };
@@ -348,20 +343,17 @@ namespace Service.AddressBook.Services
                         };
                     }
                     
-                    var ibanCheck = await _ibanService.CheckSepaIbanRequisiteAsync(new IbanInfoRequest
-                    {
-                        Iban = request.Iban
-                    });
-                
-                    if(!ibanCheck.IsSuccess)
+                    var (error, ibanCheck) = await CheckIban(request.Iban);
+                    if (error != GlobalSendErrorCode.OK)
                         return new OperationResponse()
                         {
                             IsSuccess = false,
-                            ErrorMessage = "Invalid IBAN",
-                            ErrorCode = GlobalSendErrorCode.InvalidIban
+                            ErrorCode = error
                         };
                     
                     record.Iban = request.Iban;
+                    record.Bic = ibanCheck.BankSwiftCode;
+                    record.BankName = ibanCheck.BankName;
                 }
 
                 record.Order = DateTime.UtcNow.UnixTime();
@@ -416,6 +408,21 @@ namespace Service.AddressBook.Services
                     ErrorCode = GlobalSendErrorCode.InternalError
                 };
             }
+        }
+
+        private async Task<(GlobalSendErrorCode, SepaIban)> CheckIban(string iban)
+        {
+            var ibanCheck = await _ibanService.CheckSepaIbanRequisiteAsync(new IbanInfoRequest
+            {
+                Iban = iban
+            });
+                
+            if(!ibanCheck.IsSuccess)
+                return (GlobalSendErrorCode.InvalidIban, null);
+            if (!ibanCheck.Data.SepaReachable && !ibanCheck.Data.SepaInstReachable)
+                return (GlobalSendErrorCode.IbanNotReachable, null);
+            
+            return (GlobalSendErrorCode.OK, ibanCheck.Data);
         }
     }
 }

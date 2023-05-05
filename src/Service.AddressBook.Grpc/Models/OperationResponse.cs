@@ -22,4 +22,5 @@ public enum GlobalSendErrorCode
     ContactNotFound,
     InvalidIban,
     InvalidNickname,
+    IbanNotReachable
 }
