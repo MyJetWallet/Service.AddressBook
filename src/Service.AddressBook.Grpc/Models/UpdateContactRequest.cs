@@ -11,4 +11,6 @@ public class UpdateContactRequest
     [DataMember(Order = 4)] public string Iban { get; set; }
     [DataMember(Order = 5)] public string Bic { get; set; }
     [DataMember(Order = 6)] public string BankName { get; set; }
+    [DataMember(Order = 7)] public string BankCountry { get; set; }
+    [DataMember(Order = 8)] public string FullName { get; set; }
 }

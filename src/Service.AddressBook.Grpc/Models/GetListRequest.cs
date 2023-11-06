@@ -1,4 +1,5 @@
 using System.Runtime.Serialization;
+using Service.AddressBook.Domain.Models;
 
 namespace Service.AddressBook.Grpc.Models;
 
@@ -11,4 +12,5 @@ public class GetListRequest
     
     [DataMember(Order = 4)] public bool WithIban { get; set; }
     [DataMember(Order = 5)] public bool WithNickname { get; set; }
+    [DataMember(Order = 6)] public IbanType IbanType { get; set; }
 }

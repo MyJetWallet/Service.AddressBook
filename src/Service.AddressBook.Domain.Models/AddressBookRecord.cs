@@ -17,6 +17,9 @@ namespace Service.AddressBook.Domain.Models
         [DataMember(Order = 9)] public string Bic { get; set; }
         [DataMember(Order = 10)] public string BankName { get; set; }
         [DataMember(Order = 11)] public long Order { get; set; }
+        [DataMember(Order = 12)] public string BankCountry { get; set; }
+        [DataMember(Order = 13)] public string FullName { get; set; }
+        [DataMember(Order = 14)] public IbanType IbanType { get; set; }
         
     }
 }

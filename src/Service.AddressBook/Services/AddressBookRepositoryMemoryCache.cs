@@ -49,7 +49,7 @@ namespace Service.AddressBook.Services
         }
 
         public async Task<List<AddressBookRecord>> GetListAsync(string ownerClientId, int skip, int take, bool withIban,
-            bool withNickname)
+            bool withNickname, IbanType? requestIbanType = null)
         {
             if (!IsStarted)
                 return new List<AddressBookRecord>();
@@ -60,7 +60,18 @@ namespace Service.AddressBook.Services
                 records = records.Where(t => !string.IsNullOrEmpty(t.Nickname)).ToList();
 
             if (withIban)
+            {
                 records = records.Where(t => !string.IsNullOrEmpty(t.Iban)).ToList();
+                if (requestIbanType == IbanType.Simple)
+                {
+                    records = records.Where(t => t.IbanType == IbanType.Simple).ToList();
+                }
+
+                if (requestIbanType == IbanType.Personal)
+                {
+                    records = records.Where(t => t.IbanType is IbanType.Simple or IbanType.Personal).ToList();
+                }
+            }
 
             records = records
                 .OrderByDescending(t => t.Order)

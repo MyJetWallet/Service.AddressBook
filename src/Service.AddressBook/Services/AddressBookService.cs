@@ -72,7 +72,7 @@ namespace Service.AddressBook.Services
             _logger.LogInformation("Requested get list for client {clientId}", request.OwnerClientId);
             try
             {
-                var records = await _addressBookRepository.GetListAsync(request.OwnerClientId, request.Skip, request.Take, request.WithIban, request.WithNickname);
+                var records = await _addressBookRepository.GetListAsync(request.OwnerClientId, request.Skip, request.Take, request.WithIban, request.WithNickname, request.IbanType);
                 var topContacts = await _addressBookRepository.GetListAsync(request.OwnerClientId, 0, 5,  request.WithIban, request.WithNickname);
                 return new AddressBookListResponse()
                 {
@@ -261,23 +261,38 @@ namespace Service.AddressBook.Services
                         ErrorCode = GlobalSendErrorCode.NameAlreadyUsed
                     };
 
-                var (error, ibanCheck) = await CheckIban(request.Iban);
-                if (error != GlobalSendErrorCode.OK)
-                    return new OperationResponse()
-                    {
-                        IsSuccess = false,
-                        ErrorCode = error
-                    };
-
+                var bankName = string.Empty;
+                var bankSwiftCode = string.Empty;
+                if(request.IbanType == IbanType.Simple)
+                {
+                    var (error, ibanCheck) = await CheckIban(request.Iban);
+                    if (error != GlobalSendErrorCode.OK)
+                        return new OperationResponse()
+                        {
+                            IsSuccess = false,
+                            ErrorCode = error
+                        };
+                    bankName = ibanCheck.BankName;
+                    bankSwiftCode = ibanCheck.BankSwiftCode;
+                }
+                else
+                {
+                    bankName = request.BankName;
+                    bankSwiftCode = request.Bic;
+                }
+                
                 var record = new AddressBookRecord
                 {
                     OwnerClientId = request.OwnerClientId,
                     ContactId = Guid.NewGuid().ToString("N"),
                     Iban = request.Iban,
-                    Bic = ibanCheck.BankSwiftCode,
-                    BankName = ibanCheck.BankName,
+                    Bic = bankSwiftCode,
+                    BankName = bankName,
                     Order = DateTime.UtcNow.UnixTime(),
                     Name = request.Name,
+                    BankCountry = request.BankCountry,
+                    FullName = request.FullName,
+                    IbanType = request.IbanType
                 };
 
                 await _addressBookRepository.UpsertAsync(record);
@@ -343,21 +358,35 @@ namespace Service.AddressBook.Services
                         };
                     }
                     
-                    var (error, ibanCheck) = await CheckIban(request.Iban);
-                    if (error != GlobalSendErrorCode.OK)
-                        return new OperationResponse()
-                        {
-                            IsSuccess = false,
-                            ErrorCode = error
-                        };
-                    
                     record.Iban = request.Iban;
-                    record.Bic = ibanCheck.BankSwiftCode;
-                    record.BankName = ibanCheck.BankName;
+
+                    if(record.IbanType == IbanType.Simple)
+                    {
+                        var (error, ibanCheck) = await CheckIban(request.Iban);
+                        if (error != GlobalSendErrorCode.OK)
+                            return new OperationResponse()
+                            {
+                                IsSuccess = false,
+                                ErrorCode = error
+                            };
+
+                        record.Bic = ibanCheck.BankSwiftCode;
+                        record.BankName = ibanCheck.BankName;
+                    }
+                    else
+                    {
+                        record.Bic = request.Bic;
+                        record.BankName = request.BankName;
+                    }
                 }
+                
+                if(!string.IsNullOrWhiteSpace(request.BankCountry) && request.BankCountry != record.BankCountry)
+                    record.BankCountry = request.BankCountry;
+                
+                if(!string.IsNullOrWhiteSpace(request.FullName) && request.FullName != record.FullName)
+                    record.FullName = request.FullName;
 
                 record.Order = DateTime.UtcNow.UnixTime();
-
                 
                 await _addressBookRepository.UpsertAsync(record);
                 
