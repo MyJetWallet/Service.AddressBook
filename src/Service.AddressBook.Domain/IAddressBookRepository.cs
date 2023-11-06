@@ -17,6 +17,6 @@ public interface IAddressBookRepository
     Task UpsertAsync(AddressBookRecord record);
     Task DeleteAsync(string ownerClientId, string clientId);
     
-    Task<List<AddressBookRecord>> FindAsync(string ownerClientId, string searchText,bool withIban, bool withNickname);
+    Task<List<AddressBookRecord>> FindAsync(string ownerClientId, string searchText,bool withIban, bool withNickname, IbanType? requestIbanType = null);
     Task<List<AddressBookRecord>> GetAllByNicknameAsync(string nickname);
 }

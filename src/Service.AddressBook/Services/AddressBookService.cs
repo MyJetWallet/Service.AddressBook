@@ -37,7 +37,7 @@ namespace Service.AddressBook.Services
             _logger.LogInformation("Requested search for client {clientId} with text {searchText}", request.OwnerClientId, request.SearchText);
             try
             {
-                var records = await _addressBookRepository.FindAsync(request.OwnerClientId, request.SearchText, request.WithIban, request.WithNickname);
+                var records = await _addressBookRepository.FindAsync(request.OwnerClientId, request.SearchText, request.WithIban, request.WithNickname, request.IbanType);
                 var topContacts = await _addressBookRepository.GetListAsync(request.OwnerClientId, 0, 5, request.WithIban, request.WithNickname);
 
                 return new AddressBookListResponse()

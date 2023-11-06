@@ -10,4 +10,5 @@ public class SearchRequest
     [DataMember(Order = 2)] public string SearchText { get; set; }
     [DataMember(Order = 3)] public bool WithIban { get; set; }
     [DataMember(Order = 4)] public bool WithNickname { get; set; }
+    [DataMember(Order = 5)] public IbanType IbanType { get; set; }
 }

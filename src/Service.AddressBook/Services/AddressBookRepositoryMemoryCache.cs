@@ -114,7 +114,7 @@ namespace Service.AddressBook.Services
         }
 
         public async Task<List<AddressBookRecord>> FindAsync(string ownerClientId, string searchText, bool withIban,
-            bool withNickname)
+            bool withNickname, IbanType? requestIbanType = null)
         {
             if (!IsStarted)
                 return new List<AddressBookRecord>();
@@ -131,7 +131,18 @@ namespace Service.AddressBook.Services
                     (e.Nickname?.Contains(searchText, StringComparison.InvariantCultureIgnoreCase) ?? false)).ToList();
             }
             if (withIban)
+            {
                 records = records.Where(e => !string.IsNullOrWhiteSpace(e.Iban)).ToList();
+                if (requestIbanType == IbanType.Simple)
+                {
+                    records = records.Where(t => t.IbanType == IbanType.Simple).ToList();
+                }
+
+                if (requestIbanType == IbanType.Personal)
+                {
+                    records = records.Where(t => t.IbanType is IbanType.Simple or IbanType.Personal).ToList();
+                }
+            }
 
             if (withNickname)
                 records = records.Where(e => !string.IsNullOrWhiteSpace(e.Nickname)).ToList();
