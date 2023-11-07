@@ -69,7 +69,7 @@ namespace Service.AddressBook.Services
 
                 if (requestIbanType == IbanType.Personal)
                 {
-                    records = records.Where(t => t.IbanType is IbanType.Simple or IbanType.Personal).ToList();
+                    records = records.Where(t => t.IbanType is IbanType.Personal).ToList();
                 }
             }
 
@@ -140,7 +140,7 @@ namespace Service.AddressBook.Services
 
                 if (requestIbanType == IbanType.Personal)
                 {
-                    records = records.Where(t => t.IbanType is IbanType.Simple or IbanType.Personal).ToList();
+                    records = records.Where(t => t.IbanType is IbanType.Personal).ToList();
                 }
             }
 
