@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using DotNetCoreDecorators;
 using Microsoft.Extensions.Logging;
@@ -261,8 +262,8 @@ namespace Service.AddressBook.Services
                         ErrorCode = GlobalSendErrorCode.NameAlreadyUsed
                     };
 
-                var bankName = string.Empty;
-                var bankSwiftCode = string.Empty;
+                string bankName;
+                string bankSwiftCode;
                 if(request.IbanType == IbanType.Simple)
                 {
                     var (error, ibanCheck) = await CheckIban(request.Iban);
@@ -277,6 +278,34 @@ namespace Service.AddressBook.Services
                 }
                 else
                 {
+                    var (error, ibanCheck) = await CheckIban(request.Iban);
+                    if (error != GlobalSendErrorCode.OK)
+                        return new OperationResponse()
+                        {
+                            IsSuccess = false,
+                            ErrorCode = error
+                        };
+                        
+                    if (request.Bic != ibanCheck.BankSwiftCode)
+                        _logger.LogWarning("Bic {bic} is not equal to iban {iban} bic {ibanBic}", request.Bic,
+                            request.Iban, ibanCheck.BankSwiftCode);
+
+                    if(request.BankName != ibanCheck.BankName)
+                        _logger.LogWarning(
+                            "Bank name {bankName} is not equal to iban {iban} bank name {ibanBankName}",
+                            request.BankName, request.Iban, ibanCheck.BankName);
+
+                    var bicRegex = new Regex("[A-Z]{6,6}[A-Z2-9][A-NP-Z0-9]([A-Z0-9]{3,3}){0,1}\n");
+                    if (!bicRegex.Match(request.Bic).Success)
+                    {
+                        _logger.LogError("Bic {bic} is not valid", request.Bic);
+                        return new OperationResponse()
+                        {
+                            IsSuccess = false,
+                            ErrorCode = GlobalSendErrorCode.InvalidIban
+                        };
+                    }
+                    
                     bankName = request.BankName;
                     bankSwiftCode = request.Bic;
                 }
@@ -346,7 +375,7 @@ namespace Service.AddressBook.Services
                     record.Name = request.Name;
                 }
                 
-                if(!string.IsNullOrWhiteSpace(request.Iban) && request.Iban != record.Iban)
+                if(!string.IsNullOrWhiteSpace(request.Iban))
                 {
                     var existing = await _addressBookRepository.GetByIbanAsync(request.OwnerClientId, request.Iban);
                     if (existing != null)
@@ -375,8 +404,35 @@ namespace Service.AddressBook.Services
                     }
                     else
                     {
+                        var (error, ibanCheck) = await CheckIban(request.Iban);
+                        if (error != GlobalSendErrorCode.OK)
+                            return new OperationResponse()
+                            {
+                                IsSuccess = false,
+                                ErrorCode = error
+                            };
+                        
                         record.Bic = request.Bic;
+                        if (request.Bic != ibanCheck.BankSwiftCode)
+                            _logger.LogWarning("Bic {bic} is not equal to iban {iban} bic {ibanBic}", request.Bic,
+                                request.Iban, ibanCheck.BankSwiftCode);
+
                         record.BankName = request.BankName;
+                        if(request.BankName != ibanCheck.BankName)
+                            _logger.LogWarning(
+                                "Bank name {bankName} is not equal to iban {iban} bank name {ibanBankName}",
+                                request.BankName, request.Iban, ibanCheck.BankName);
+                        
+                        var bicRegex = new Regex("[A-Z]{6,6}[A-Z2-9][A-NP-Z0-9]([A-Z0-9]{3,3}){0,1}\n");
+                        if (!bicRegex.Match(request.Bic).Success)
+                        {
+                            _logger.LogError("Bic {bic} is not valid", request.Bic);
+                            return new OperationResponse()
+                            {
+                                IsSuccess = false,
+                                ErrorCode = GlobalSendErrorCode.InvalidIban
+                            };
+                        }
                     }
                 }
                 
