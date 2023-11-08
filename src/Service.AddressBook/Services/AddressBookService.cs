@@ -295,7 +295,7 @@ namespace Service.AddressBook.Services
                             "Bank name {bankName} is not equal to iban {iban} bank name {ibanBankName}",
                             request.BankName, request.Iban, ibanCheck.BankName);
 
-                    var bicRegex = new Regex("[A-Z]{6,6}[A-Z2-9][A-NP-Z0-9]([A-Z0-9]{3,3}){0,1}\n");
+                    var bicRegex = new Regex("^[A-Z]{4}[A-Z]{2}[0-9A-Z]{2}[0-9A-Z]{3}$");
                     if (!bicRegex.Match(request.Bic).Success)
                     {
                         _logger.LogError("Bic {bic} is not valid", request.Bic);
