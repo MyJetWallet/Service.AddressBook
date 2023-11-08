@@ -280,18 +280,18 @@ namespace Service.AddressBook.Services
                 {
                     var (error, ibanCheck) = await CheckIban(request.Iban);
                     if (error != GlobalSendErrorCode.OK)
-                        return new OperationResponse()
-                        {
-                            IsSuccess = false,
-                            ErrorCode = error
-                        };
+                    {
+                        if(error == GlobalSendErrorCode.InternalError)
+                            _logger.LogError("Cannot check iban {iban}", request.Iban);
+                        else
+                            _logger.LogError("Iban {iban} is not valid", request.Iban);
+                    }
                         
-                    if (request.Bic != ibanCheck.BankSwiftCode)
-                        _logger.LogWarning("Bic {bic} is not equal to iban {iban} bic {ibanBic}", request.Bic,
+                    if (ibanCheck?.BankSwiftCode != null && ibanCheck?.BankSwiftCode != request.Bic)
+                        _logger.LogError("Bic {bic} is not equal to iban {iban} bic {ibanBic}", request.Bic,
                             request.Iban, ibanCheck.BankSwiftCode);
-
-                    if(request.BankName != ibanCheck.BankName)
-                        _logger.LogWarning(
+                    if(ibanCheck?.BankName != null && ibanCheck?.BankName != request.BankName)
+                        _logger.LogError(
                             "Bank name {bankName} is not equal to iban {iban} bank name {ibanBankName}",
                             request.BankName, request.Iban, ibanCheck.BankName);
 
@@ -406,20 +406,21 @@ namespace Service.AddressBook.Services
                     {
                         var (error, ibanCheck) = await CheckIban(request.Iban);
                         if (error != GlobalSendErrorCode.OK)
-                            return new OperationResponse()
-                            {
-                                IsSuccess = false,
-                                ErrorCode = error
-                            };
+                        {
+                            if(error == GlobalSendErrorCode.InternalError)
+                                _logger.LogError("Cannot check iban {iban}", request.Iban);
+                            else
+                                _logger.LogError("Iban {iban} is not valid", request.Iban);
+                        }
                         
                         record.Bic = request.Bic;
-                        if (request.Bic != ibanCheck.BankSwiftCode)
-                            _logger.LogWarning("Bic {bic} is not equal to iban {iban} bic {ibanBic}", request.Bic,
+                        if (ibanCheck?.BankSwiftCode != null && ibanCheck?.BankSwiftCode != request.Bic)
+                            _logger.LogError("Bic {bic} is not equal to iban {iban} bic {ibanBic}", request.Bic,
                                 request.Iban, ibanCheck.BankSwiftCode);
 
                         record.BankName = request.BankName;
-                        if(request.BankName != ibanCheck.BankName)
-                            _logger.LogWarning(
+                        if(ibanCheck?.BankName != null && ibanCheck?.BankName != request.BankName)
+                            _logger.LogError(
                                 "Bank name {bankName} is not equal to iban {iban} bank name {ibanBankName}",
                                 request.BankName, request.Iban, ibanCheck.BankName);
                         
@@ -497,17 +498,25 @@ namespace Service.AddressBook.Services
 
         private async Task<(GlobalSendErrorCode, SepaIban)> CheckIban(string iban)
         {
-            var ibanCheck = await _ibanService.CheckSepaIbanRequisiteAsync(new IbanInfoRequest
+            try
             {
-                Iban = iban
-            });
+                var ibanCheck = await _ibanService.CheckSepaIbanRequisiteAsync(new IbanInfoRequest
+                {
+                    Iban = iban
+                });
                 
-            if(!ibanCheck.IsSuccess)
-                return (GlobalSendErrorCode.InvalidIban, null);
-            if (!ibanCheck.Data.SepaReachable && !ibanCheck.Data.SepaInstReachable)
-                return (GlobalSendErrorCode.IbanNotReachable, null);
+                if(!ibanCheck.IsSuccess)
+                    return (GlobalSendErrorCode.InvalidIban, null);
+                if (!ibanCheck.Data.SepaReachable && !ibanCheck.Data.SepaInstReachable)
+                    return (GlobalSendErrorCode.IbanNotReachable, null);
             
-            return (GlobalSendErrorCode.OK, ibanCheck.Data);
+                return (GlobalSendErrorCode.OK, ibanCheck.Data);
+            }
+            catch (Exception e)
+            {
+                _logger.LogError(e, "Cannot check iban {iban}", iban);
+                return (GlobalSendErrorCode.InternalError, null);
+            }
         }
     }
 }
