@@ -295,10 +295,10 @@ namespace Service.AddressBook.Services
                     if (ibanCheck?.BankSwiftCode != null && ibanCheck?.BankSwiftCode != request.Bic)
                         _logger.LogError("Bic {bic} is not equal to iban {iban} bic {ibanBic}", request.Bic,
                             request.Iban, ibanCheck.BankSwiftCode);
-                    if(ibanCheck?.BankName != null && ibanCheck?.BankName != request.BankName)
-                        _logger.LogError(
-                            "Bank name {bankName} is not equal to iban {iban} bank name {ibanBankName}",
-                            request.BankName, request.Iban, ibanCheck.BankName);
+                    // if(ibanCheck?.BankName != null && ibanCheck?.BankName != request.BankName)
+                    //     _logger.LogError(
+                    //         "Bank name {bankName} is not equal to iban {iban} bank name {ibanBankName}",
+                    //         request.BankName, request.Iban, ibanCheck.BankName);
 
                     if (!_bicRegex.Match(request.Bic).Success)
                     {
@@ -421,10 +421,10 @@ namespace Service.AddressBook.Services
                             _logger.LogError("Bic {bic} is not equal to iban {iban} bic {ibanBic}", request.Bic,
                                 request.Iban, ibanCheck.BankSwiftCode);
 
-                        if(ibanCheck?.BankName != null && ibanCheck?.BankName != record.BankName)
-                            _logger.LogError(
-                                "Bank name {bankName} is not equal to iban {iban} bank name {ibanBankName}",
-                                request.BankName, request.Iban, ibanCheck.BankName);
+                        // if(ibanCheck?.BankName != null && ibanCheck?.BankName != record.BankName)
+                        //     _logger.LogError(
+                        //         "Bank name {bankName} is not equal to iban {iban} bank name {ibanBankName}",
+                        //         request.BankName, request.Iban, ibanCheck.BankName);
                     }
                 }
                 
