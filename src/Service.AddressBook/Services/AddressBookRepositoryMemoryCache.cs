@@ -40,7 +40,7 @@ namespace Service.AddressBook.Services
 
         public async Task<AddressBookRecord> GetByNameAsync(string ownerClientId, string name)
         {
-            return _records.FirstOrDefault(t => t.OwnerClientId == ownerClientId && t.Name == name);
+            return _records.FirstOrDefault(t => t.OwnerClientId == ownerClientId && t.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
         }
 
         public async Task<AddressBookRecord> GetByIbanAsync(string ownerClientId, string iban)
