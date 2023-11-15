@@ -25,6 +25,7 @@ namespace Service.AddressBook.Services
         private readonly IServiceBusPublisher<ContactReceivingApproved> _contactReceivingApprovedPublisher;
         private readonly IIbanService _ibanService;
         private static Regex _bicRegex = new Regex("^[A-Z]{4}[A-Z]{2}[0-9A-Z]{2}[0-9A-Z]{3}$");
+        private static Regex _ibanRegex = new Regex("/^(?:(?:IT|SM)\\d{2}[A-Z]\\d{22}|CY\\d{2}[A-Z]\\d{23}|NL\\d{2}[A-Z]{4}\\d{10}|LV\\d{2}[A-Z]{4}\\d{13}|(?:BG|BH|GB|IE)\\d{2}[A-Z]{4}\\d{14}|GI\\d{2}[A-Z]{4}\\d{15}|RO\\d{2}[A-Z]{4}\\d{16}|KW\\d{2}[A-Z]{4}\\d{22}|MT\\d{2}[A-Z]{4}\\d{23}|NO\\d{13}|(?:DK|FI|GL|FO)\\d{16}|MK\\d{17}|(?:AT|EE|KZ|LU|XK)\\d{18}|(?:BA|HR|LI|CH|CR)\\d{19}|(?:GE|DE|LT|ME|RS)\\d{20}|IL\\d{21}|(?:AD|CZ|ES|MD|SA)\\d{22}|PT\\d{23}|(?:BE|IS)\\d{24}|(?:FR|MR|MC)\\d{25}|(?:AL|DO|LB|PL)\\d{26}|(?:AZ|HU)\\d{27}|(?:GR|MU)\\d{28})$/i");
         public AddressBookService(ILogger<AddressBookService> logger, IAddressBookRepository addressBookRepository, IClientProfileService clientProfileService, IServiceBusPublisher<ContactReceivingApproved> contactReceivingApprovedPublisher, IIbanService ibanService)
         {
             _logger = logger;
@@ -295,11 +296,17 @@ namespace Service.AddressBook.Services
                     if (ibanCheck?.BankSwiftCode != null && ibanCheck?.BankSwiftCode != request.Bic)
                         _logger.LogError("Bic {bic} is not equal to iban {iban} bic {ibanBic}", request.Bic,
                             request.Iban, ibanCheck.BankSwiftCode);
-                    // if(ibanCheck?.BankName != null && ibanCheck?.BankName != request.BankName)
-                    //     _logger.LogError(
-                    //         "Bank name {bankName} is not equal to iban {iban} bank name {ibanBankName}",
-                    //         request.BankName, request.Iban, ibanCheck.BankName);
 
+                    if (!_ibanRegex.Match(request.Iban).Success)
+                    {
+                        _logger.LogError("Iban {iban} is not valid", request.Iban);
+                        return new OperationResponse()
+                        {
+                            IsSuccess = false,
+                            ErrorCode = GlobalSendErrorCode.InvalidIban
+                        };
+                    }
+                    
                     if (!_bicRegex.Match(request.Bic).Success)
                     {
                         _logger.LogError("Bic {bic} is not valid", request.Bic);
@@ -420,11 +427,16 @@ namespace Service.AddressBook.Services
                         if (ibanCheck?.BankSwiftCode != null && ibanCheck?.BankSwiftCode != record.Bic)
                             _logger.LogError("Bic {bic} is not equal to iban {iban} bic {ibanBic}", request.Bic,
                                 request.Iban, ibanCheck.BankSwiftCode);
-
-                        // if(ibanCheck?.BankName != null && ibanCheck?.BankName != record.BankName)
-                        //     _logger.LogError(
-                        //         "Bank name {bankName} is not equal to iban {iban} bank name {ibanBankName}",
-                        //         request.BankName, request.Iban, ibanCheck.BankName);
+                        
+                        if (!_ibanRegex.Match(request.Iban).Success)
+                        {
+                            _logger.LogError("Iban {iban} is not valid", request.Iban);
+                            return new OperationResponse()
+                            {
+                                IsSuccess = false,
+                                ErrorCode = GlobalSendErrorCode.InvalidIban
+                            };
+                        }
                     }
                 }
                 
