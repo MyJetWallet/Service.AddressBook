@@ -313,7 +313,7 @@ namespace Service.AddressBook.Services
                         return new OperationResponse()
                         {
                             IsSuccess = false,
-                            ErrorCode = GlobalSendErrorCode.InvalidIban
+                            ErrorCode = GlobalSendErrorCode.InvalidBic
                         };
                     }
                     
@@ -449,7 +449,7 @@ namespace Service.AddressBook.Services
                         return new OperationResponse()
                         {
                             IsSuccess = false,
-                            ErrorCode = GlobalSendErrorCode.InvalidIban
+                            ErrorCode = GlobalSendErrorCode.InvalidBic
                         };
                     }
                     record.Bic = request.Bic;
