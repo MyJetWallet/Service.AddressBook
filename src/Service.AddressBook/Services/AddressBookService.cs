@@ -412,6 +412,7 @@ namespace Service.AddressBook.Services
 
                         record.Bic = ibanCheck.BankSwiftCode;
                         record.BankName = ibanCheck.BankName;
+                        record.Iban = request.Iban;
                     }
                     else
                     {
@@ -428,6 +429,7 @@ namespace Service.AddressBook.Services
                             _logger.LogError("Bic {bic} is not equal to iban {iban} bic {ibanBic}", request.Bic,
                                 request.Iban, ibanCheck.BankSwiftCode);
                         
+                        
                         // if (!_ibanRegex.Match(request.Iban).Success)
                         // {
                         //     _logger.LogError("Iban {iban} is not valid", request.Iban);
@@ -437,6 +439,8 @@ namespace Service.AddressBook.Services
                         //         ErrorCode = GlobalSendErrorCode.InvalidIban
                         //     };
                         // }
+                        
+                        record.Iban = request.Iban;
                     }
                 }
                 
