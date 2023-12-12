@@ -245,17 +245,17 @@ namespace Service.AddressBook.Services
             _logger.LogInformation("Requested create for client {clientId} and iban {iban}", request.OwnerClientId, request.Iban);
             try
             {
-                // var existingRecord =
-                //     await _addressBookRepository.GetByIbanAsync(request.OwnerClientId, request.Iban);
-                // if (existingRecord != null)
-                //     return new OperationResponse()
-                //     {
-                //         IsSuccess = false,
-                //         ErrorMessage = "Record already exists",
-                //         ErrorCode = GlobalSendErrorCode.IbanAlreadyUsed
-                //     };
+                var existingRecord =
+                    await _addressBookRepository.GetByIbanAsync(request.OwnerClientId, request.Iban, request.IbanType);
+                if (existingRecord != null)
+                    return new OperationResponse()
+                    {
+                        IsSuccess = false,
+                        ErrorMessage = "Record already exists",
+                        ErrorCode = GlobalSendErrorCode.IbanAlreadyUsed
+                    };
 
-                var existingRecord = await _addressBookRepository.GetByNameAsync(request.OwnerClientId, request.Name);
+                existingRecord = await _addressBookRepository.GetByNameAsync(request.OwnerClientId, request.Name);
                 if (existingRecord != null)
                     return new OperationResponse()
                     {
@@ -388,15 +388,15 @@ namespace Service.AddressBook.Services
                 
                 if(!string.IsNullOrWhiteSpace(request.Iban))
                 {
-                    // var existing = await _addressBookRepository.GetByIbanAsync(request.OwnerClientId, request.Iban);
-                    // if (existing != null && existing.ContactId != request.ContactId)
-                    // {
-                    //     return new OperationResponse()
-                    //     {
-                    //         IsSuccess = false,
-                    //         ErrorCode = GlobalSendErrorCode.IbanAlreadyUsed
-                    //     };
-                    // }
+                    var existing = await _addressBookRepository.GetByIbanAsync(request.OwnerClientId, request.Iban, record.IbanType);
+                    if (existing != null && existing.ContactId != request.ContactId)
+                    {
+                        return new OperationResponse()
+                        {
+                            IsSuccess = false,
+                            ErrorCode = GlobalSendErrorCode.IbanAlreadyUsed
+                        };
+                    }
                     
                     request.Iban = request.Iban.ToUpper().Replace(" ","");
 

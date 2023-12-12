@@ -9,7 +9,7 @@ public interface IAddressBookRepository
     Task<AddressBookRecord> GetAsync(string contactId);
     Task<AddressBookRecord> GetByNicknameAsync(string ownerClientId, string nickname);
     Task<AddressBookRecord> GetByNameAsync(string ownerClientId, string name);
-    Task<AddressBookRecord> GetByIbanAsync(string ownerClientId, string iban);
+    Task<AddressBookRecord> GetByIbanAsync(string ownerClientId, string iban, IbanType type);
 
     Task<List<AddressBookRecord>> GetListAsync(string ownerClientId, int skip, int take, bool withIban,
         bool withNickname, IbanType? requestIbanType = null);

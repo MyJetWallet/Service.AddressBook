@@ -29,7 +29,7 @@ namespace Service.AddressBook.Postgres
             
             modelBuilder.Entity<AddressBookRecord>().HasIndex(e => new {e.OwnerClientId, e.Nickname}).IsUnique();
             modelBuilder.Entity<AddressBookRecord>().HasIndex(e => new {e.OwnerClientId, e.Name}).IsUnique();
-            modelBuilder.Entity<AddressBookRecord>().HasIndex(e => new {e.OwnerClientId, e.Iban}).IsUnique();
+            modelBuilder.Entity<AddressBookRecord>().HasIndex(e => new {e.OwnerClientId, e.Iban, e.IbanType}).IsUnique();
 
             base.OnModelCreating(modelBuilder);
         }

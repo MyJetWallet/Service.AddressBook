@@ -43,9 +43,10 @@ namespace Service.AddressBook.Services
             return _records.FirstOrDefault(t => t.OwnerClientId == ownerClientId && t.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
         }
 
-        public async Task<AddressBookRecord> GetByIbanAsync(string ownerClientId, string iban)
+        public async Task<AddressBookRecord> GetByIbanAsync(string ownerClientId, string iban, IbanType type)
         {
-            return _records.FirstOrDefault(t => t.OwnerClientId == ownerClientId && t.Iban == iban);
+            return _records.FirstOrDefault(
+                t => t.OwnerClientId == ownerClientId && t.Iban == iban && t.IbanType == type);
         }
 
         public async Task<List<AddressBookRecord>> GetListAsync(string ownerClientId, int skip, int take, bool withIban,
