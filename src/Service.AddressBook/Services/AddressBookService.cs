@@ -294,7 +294,7 @@ namespace Service.AddressBook.Services
                     }
                         
                     if (ibanCheck?.BankSwiftCode != null && ibanCheck?.BankSwiftCode != request.Bic)
-                        _logger.LogError("Bic {bic} is not equal to iban {iban} bic {ibanBic}", request.Bic,
+                        _logger.LogWarning("Bic {bic} is not equal to iban {iban} bic {ibanBic}", request.Bic,
                             request.Iban, ibanCheck.BankSwiftCode);
 
                     // if (!_ibanRegex.Match(request.Iban).Success)
