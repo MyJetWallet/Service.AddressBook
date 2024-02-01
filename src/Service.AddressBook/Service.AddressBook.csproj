@@ -21,7 +21,7 @@
     <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
     <PackageReference Include="MyJetWallet.Clearjunction.Client" Version="1.1.7" />
     <PackageReference Include="MyJetWallet.Sdk.GrpcMetrics" Version="2.4.0" />
-    <PackageReference Include="MyJetWallet.Sdk.GrpcSchema" Version="2.1.0" />
+    <PackageReference Include="MyJetWallet.Sdk.GrpcSchema" Version="2.2.0" />
     <PackageReference Include="MyJetWallet.Sdk.Postgres" Version="2.6.2" />
     <PackageReference Include="MyJetWallet.Sdk.Service" Version="2.6.3" />
     <PackageReference Include="MyJetWallet.Sdk.ServiceBus" Version="2.3.0" />
