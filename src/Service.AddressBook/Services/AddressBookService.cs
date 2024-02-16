@@ -425,7 +425,7 @@ namespace Service.AddressBook.Services
                                 _logger.LogError("Iban {iban} is not valid", request.Iban);
                         }
                         
-                        if (ibanCheck?.BankSwiftCode != null && ibanCheck?.BankSwiftCode != record.Bic)
+                        if (ibanCheck?.BankSwiftCode != null && ibanCheck?.BankSwiftCode.TrimEnd('X') != record.Bic.TrimEnd('X'))
                             _logger.LogError("Bic {bic} is not equal to iban {iban} bic {ibanBic}", request.Bic,
                                 request.Iban, ibanCheck.BankSwiftCode);
                         

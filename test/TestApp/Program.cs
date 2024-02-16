@@ -15,6 +15,7 @@ namespace TestApp
             Console.Write("Press enter to start");
             Console.ReadLine();
 
+            Console.WriteLine("ABCABC1XXX".TrimEnd('X'));
 
             // var factory = new AddressBookClientFactory("http://localhost:5001");
             // var client = factory.GetHelloService();
