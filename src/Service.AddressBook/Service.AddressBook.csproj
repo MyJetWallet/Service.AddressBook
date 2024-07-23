@@ -22,7 +22,7 @@
     <PackageReference Include="MyJetWallet.Clearjunction.Client" Version="1.1.8" />
     <PackageReference Include="MyJetWallet.Sdk.GrpcMetrics" Version="2.4.1" />
     <PackageReference Include="MyJetWallet.Sdk.GrpcSchema" Version="2.2.0" />
-    <PackageReference Include="MyJetWallet.Sdk.Postgres" Version="2.6.6" />
+    <PackageReference Include="MyJetWallet.Sdk.Postgres" Version="2.6.7" />
     <PackageReference Include="MyJetWallet.Sdk.Service" Version="2.7.0" />
     <PackageReference Include="MyJetWallet.Sdk.ServiceBus" Version="2.4.1" />
     <PackageReference Include="MyJetWallet.Service.Clearjunction.Client" Version="2.5.2" />
