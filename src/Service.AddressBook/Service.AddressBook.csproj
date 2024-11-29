@@ -9,23 +9,23 @@
   <ItemGroup>
     <PackageReference Include="Autofac.Extensions.DependencyInjection" Version="10.0.0" />
     <PackageReference Include="Dapper" Version="2.1.44" />
-    <PackageReference Include="Grpc.AspNetCore" Version="2.66.0" />
+    <PackageReference Include="Grpc.AspNetCore" Version="2.67.0" />
     <PackageReference Include="JetBrains.Annotations" Version="2024.3.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.10" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="8.0.10">
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="9.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.10" />
-    <PackageReference Include="Microsoft.Extensions.Configuration" Version="8.0.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="9.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.0" />
     <PackageReference Include="MyJetWallet.Clearjunction.Client" Version="1.1.8" />
     <PackageReference Include="MyJetWallet.Sdk.GrpcMetrics" Version="2.4.1" />
     <PackageReference Include="MyJetWallet.Sdk.GrpcSchema" Version="2.2.0" />
-    <PackageReference Include="MyJetWallet.Sdk.Postgres" Version="2.6.9" />
-    <PackageReference Include="MyJetWallet.Sdk.Service" Version="2.7.0" />
+    <PackageReference Include="MyJetWallet.Sdk.Postgres" Version="2.6.10" />
+    <PackageReference Include="MyJetWallet.Sdk.Service" Version="2.8.0" />
     <PackageReference Include="MyJetWallet.Sdk.ServiceBus" Version="2.4.1" />
-    <PackageReference Include="MyJetWallet.Service.Clearjunction.Client" Version="2.7.30" />
+    <PackageReference Include="MyJetWallet.Service.Clearjunction.Client" Version="2.7.43" />
     <PackageReference Include="MyJetWallet.Service.ClientProfile.Client" Version="2.11.4" />
     <PackageReference Include="MyJetWallet.Service.InternalTransfer.Client" Version="1.4.4" />
     <PackageReference Include="MyJetWallet.ServiceBus.SessionAudit" Version="1.0.6" />
