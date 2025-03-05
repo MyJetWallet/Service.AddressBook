@@ -26,7 +26,7 @@
     <PackageReference Include="MyJetWallet.Sdk.Service" Version="2.8.0" />
     <PackageReference Include="MyJetWallet.Sdk.ServiceBus" Version="2.5.2" />
     <PackageReference Include="MyJetWallet.Service.Clearjunction.Client" Version="2.7.48" />
-    <PackageReference Include="MyJetWallet.Service.ClientProfile.Client" Version="2.11.7" />
+    <PackageReference Include="MyJetWallet.Service.ClientProfile.Client" Version="2.12.0" />
     <PackageReference Include="MyJetWallet.Service.InternalTransfer.Client" Version="1.4.4" />
     <PackageReference Include="MyJetWallet.ServiceBus.SessionAudit" Version="1.0.6" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
