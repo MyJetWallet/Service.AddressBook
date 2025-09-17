@@ -29,7 +29,7 @@
     <PackageReference Include="MyJetWallet.Service.ClientProfile.Client" Version="2.13.3" />
     <PackageReference Include="MyJetWallet.Service.InternalTransfer.Client" Version="1.4.4" />
     <PackageReference Include="MyJetWallet.ServiceBus.SessionAudit" Version="1.0.6" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
     <PackageReference Include="prometheus-net.AspNetCore" Version="8.2.1" />
     <PackageReference Include="protobuf-net.Grpc.AspNetCore" Version="1.2.2" />
     <PackageReference Include="SimpleTrading.BaseMetrics" Version="1.0.3" />
